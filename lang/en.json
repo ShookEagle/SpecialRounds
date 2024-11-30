@@ -1,0 +1,9 @@
+{
+  "prefix": "{white}[{green}SR{white}] {white}",
+  "admin": "%prefix%{red}(ADMIN){grey} ",
+  "error": "%prefix%{darkred}ERROR:{red} ",
+  "test": "%prefix%This message is for testing | if you see this please contact ShookEagle",
+  "in_dev": "%prefix%This feature is currently in development",
+  "server_rng_generated": "generated {0} of chance 1-{1}",
+  "SR_round_next": "%prefix%The next round will be a {green}{0}{white} round."
+}
