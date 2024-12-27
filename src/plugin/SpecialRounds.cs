@@ -8,7 +8,7 @@ using SpecialRounds.plugin.services;
 
 namespace SpecialRounds.plugin;
 
-public class SpecialRounds : BasePlugin, IPluginConfig<SpecialRoundsConfig>, IPlugin
+public class SpecialRounds : BasePlugin, IPluginConfig<SpecialRoundsConfig>, ISpecialRounds
 {
     private readonly Dictionary<string, Command> commands = new();
     public override string ModuleName => "SpecialRounds";
@@ -17,7 +17,7 @@ public class SpecialRounds : BasePlugin, IPluginConfig<SpecialRoundsConfig>, IPl
     public override string ModuleDescription => "Special Rounds Plugin for the EdgeGamers AWP Server";
     
     private IAnnouncer? _announcer;
-    private ISpecialRoundService _specialRoundService;
+    private ISpecialRoundService? _specialRoundService;
     public SpecialRoundsConfig Config { get; set; } = new();
     public void OnConfigParsed(SpecialRoundsConfig config)
     {
