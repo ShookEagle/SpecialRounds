@@ -11,10 +11,10 @@ public class RoundPreStartListener
     {
         this.plugin = plugin;
         
-        plugin.GetBase().RegisterEventHandler<EventRoundPrestart>(OnRoundPreStart);
+        plugin.GetBase().RegisterEventHandler<EventRoundStart>(OnRoundPreStart);
     }
     
-    private HookResult OnRoundPreStart(EventRoundPrestart @event, GameEventInfo info)
+    private HookResult OnRoundPreStart(EventRoundStart @event, GameEventInfo info)
     {
         plugin.GetSpecialRoundService().startSpecialRound();
         

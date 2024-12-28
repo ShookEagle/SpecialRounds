@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using SpecialRounds.api.plugin;
 using SpecialRounds.api.plugin.services;
 using SpecialRounds.plugin.commands;
+using SpecialRounds.plugin.listeners;
 using SpecialRounds.plugin.services;
 
 namespace SpecialRounds.plugin;
@@ -45,6 +46,9 @@ public class SpecialRounds : BasePlugin, IPluginConfig<SpecialRoundsConfig>, ISp
     
     public override void Load(bool hotReload)
     {
+        _ = new RoundEndListener(this);
+        _ = new RoundPreStartListener(this);
+        
         _announcer = new Announcer(this);
         _specialRoundService = new SpecialRoundService(this);
         

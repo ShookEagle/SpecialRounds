@@ -12,17 +12,16 @@ public class SpecialRoundService(SpecialRounds plugin) : ISpecialRoundService
 {
     private SpecialRoundTypes RoundType = SpecialRoundTypes.Regular;
     private Random random = new Random();
-
-    public SpecialRoundTypes GetCurrentRoundType()
-    {
-        return RoundType;
-    }
+    
 
     public void generateSpecialRound()
     {
-        var count = Enum.GetNames(typeof(SpecialRoundTypes)).Length;
+        var values = Enum.GetValues(typeof(SpecialRoundTypes))
+            .Cast<SpecialRoundTypes>()
+            .Where(type => type != SpecialRoundTypes.Regular)
+            .ToArray();
 
-        RoundType = (SpecialRoundTypes)random.Next(2, count);
+        RoundType = values[random.Next(values.Length)];
 
         plugin.GetAnnouncer().Announce("SR_round_next", RoundType.ToFriendlyString());
     }
@@ -39,12 +38,12 @@ public class SpecialRoundService(SpecialRounds plugin) : ISpecialRoundService
             player.PlayerPawn.Value!.VelocityModifier = 1.0f;
         }
         plugin.GetBase().RemoveListener<Listeners.OnTick>(OnTick);
-        plugin.GetBase().DeregisterEventHandler<EventPlayerHurt>(OnPlayerHurt);
-        
+        //plugin.GetBase().DeregisterEventHandler<EventPlayerHurt>(OnPlayerHurt);
     }
 
     public void startSpecialRound()
     {
+        plugin.LogLocalizedServerMessage("test");
         if (RoundType == SpecialRoundTypes.Regular) return;
 
         switch (RoundType)
@@ -52,7 +51,7 @@ public class SpecialRoundService(SpecialRounds plugin) : ISpecialRoundService
             case SpecialRoundTypes.AutoBhop: StartAutoBhop(); break;
             case SpecialRoundTypes.Speed: StartSpeed(); break;
             case SpecialRoundTypes.LowGrav: StartLowGrav(); break;
-            case SpecialRoundTypes.HeadshotOnly: StartHeadshotOnly(); break;
+            //case SpecialRoundTypes.HeadshotOnly: StartHeadshotOnly(); break;
             case SpecialRoundTypes.KnifeOnly: StartKnifeOnly(); break;
             case SpecialRoundTypes.NoScope: StartNoScope(); break;
         }
@@ -78,7 +77,7 @@ public class SpecialRoundService(SpecialRounds plugin) : ISpecialRoundService
         Server.ExecuteCommand("sv_gravity 400");
     }
     
-    private void StartHeadshotOnly()
+    /*private void StartHeadshotOnly()
     {
         foreach (var player in Utilities.GetPlayers())
         {
@@ -87,7 +86,7 @@ public class SpecialRoundService(SpecialRounds plugin) : ISpecialRoundService
             
             plugin.GetBase().RegisterEventHandler<EventPlayerHurt>(OnPlayerHurt);
         }
-    }
+    }*/
 
     private void StartKnifeOnly()
     {
@@ -115,12 +114,7 @@ public class SpecialRoundService(SpecialRounds plugin) : ISpecialRoundService
         var victimPawn = victim.PlayerPawn.Value;
         if (attackerPawn == null || victimPawn == null) return HookResult.Continue;
         
-        if (@event.Hitgroup == 1)
-        {
-            victimPawn.Health -= @event.DmgHealth;
-            victimPawn.ArmorValue -= @event.DmgArmor;
-        }
-        else
+        if (@event.Hitgroup != 1)
         {
             @event.DmgHealth = 0;
             @event.DmgArmor = 0;
@@ -138,7 +132,7 @@ public class SpecialRoundService(SpecialRounds plugin) : ISpecialRoundService
             if (weaponServices == null) return;
             var activeWeapon = weaponServices.ActiveWeapon.Value;
             if (activeWeapon == null || !activeWeapon.IsValid) return;
-            activeWeapon.NextPrimaryAttackTick = Server.TickCount + 500;
+            activeWeapon.NextSecondaryAttackTick = Server.TickCount + 500;
         }
     }
 }
